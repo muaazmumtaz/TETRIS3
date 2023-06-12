@@ -462,7 +462,7 @@ col1, col2, col3 = st.columns(3)
 
 with col2:
    img1 = Image.open('DATA/UMKM.jpg')
-   st.image(img1, caption='Sumber : UMKM sebagai Sarana Peningkatan Ekonomi dan Membuka Lapangan Pekerjaan')
+   st.image(img1, caption='UMKM sebagai Sarana Peningkatan Ekonomi dan Membuka Lapangan Pekerjaan')
 
 
 
