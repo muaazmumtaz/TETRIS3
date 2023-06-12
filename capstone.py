@@ -6,8 +6,6 @@ import plotly.graph_objs as go
 import plotly.express as px
 from PIL import Image
 from plotly.subplots import make_subplots
-import locale
-locale.setlocale(locale.LC_ALL, 'id_ID')
 
 # Setting Streamlit
 st.set_page_config(layout="wide")
@@ -24,6 +22,25 @@ data_GK = pd.read_excel('DATA/Profil Kemiskinan.xlsx', sheet_name='Garis Kemiski
 data_ART = pd.read_excel('DATA/Profil Kemiskinan.xlsx', sheet_name='GK_ART')
 data_GR = pd.read_excel('DATA/Profil Kemiskinan.xlsx', sheet_name='Gini Ratio')
 data_gdp = pd.read_excel('DATA/DATA Indonesia.xlsx')
+
+def rupiah(number):
+    # Convert the number to a string
+    number_str = str(number)
+
+    # Split the number into integer and decimal parts
+    parts = number_str.split(".")
+
+    # Format the integer part with a thousands separator
+    integer_part = parts[0]
+    integer_part = "{0:,}".format(int(integer_part)).replace(",", ".")
+
+    # Format the decimal part or add ".00" if it's missing
+    decimal_part = parts[1] if len(parts) > 1 else "00"
+
+    # Combine the integer and decimal parts with the currency symbol
+    formatted_number = f"Rp. {integer_part},{decimal_part}"
+
+    return formatted_number
 
 st.markdown('### BAB I. Pendahuluan')
 
@@ -90,7 +107,7 @@ if option3 == 'Jumlah (Ribu)':
 elif option3 == 'Persentase':
    df_indo = str(df_indo) + ' %'
 elif option3 == 'Garis':
-   df_indo = locale.currency(int(df_indo), grouping=True, symbol='Rp. ')
+   df_indo = rupiah(int(df_indo))
 
 st.metric(label=f'{option3} Kemiskinan Indonesia', value=df_indo, delta=None)
 
@@ -104,7 +121,7 @@ with highest:
    elif option3 == 'Persentase':
       high_val = str(high_val) + ' %'
    elif option3 == 'Garis':
-      high_val = locale.currency(int(high_val), grouping=True, symbol='Rp. ')
+      high_val = rupiah(int(high_val))
    
    if option3 == 'Garis':
       st.metric(label=f'{option3} Kemiskinan Tertinggi', value=high, delta=high_val)
@@ -119,7 +136,7 @@ with lowest:
    elif option3 == 'Persentase':
       low_val = str(low_val) + ' %'
    elif option3 == 'Garis':
-      low_val = locale.currency(int(low_val), grouping=True, symbol='Rp. ')
+      low_val = rupiah(int(low_val))
 
    if option3 == 'Garis':
       st.metric(label=f'{option3} Kemiskinan Terendah', value=low, delta=low_val, delta_color='inverse')
@@ -252,7 +269,7 @@ with highest2:
       high_val = str(high_val) + ' %'
    elif option8 == 'Garis ':
       try :
-         high_val = locale.currency(int(high_val), grouping=True, symbol='Rp. ')
+         high_val = rupiah(int(high_val))
       except :
          high_val = np.nan
    
@@ -270,7 +287,7 @@ with lowest2:
       low_val = str(low_val) + ' %'
    elif option8 == 'Garis ':
       try :
-         low_val = locale.currency(int(low_val), grouping=True, symbol='Rp. ')
+         low_val = rupiah(int(low_val))
       except :
          low_val = np.nan
 
@@ -311,13 +328,13 @@ with col9:
 
 with col10:
    value = data_gdp['Estimasi Pendapatan (Harga Konstan)'].loc[data_gdp['Tahun']==option9].values[0]
-   value = locale.currency(int(value), grouping=True, symbol='Rp. ')
+   value = rupiah(int(value))
    value2 = str(round(data_gdp['%HK'].loc[data_gdp['Tahun']==option9].values[0], 2)) + ' %'
    st.metric(label=f'Estimasi Pendapatan (Harga Konstan) Tahun {option9}', value=value, delta=value2 + f' dari Tahun {option9-1}')
 
 with col11:
    value = data_gdp['Estimasi Pendapatan (Harga Berlaku)'].loc[data_gdp['Tahun']==option9].values[0]
-   value = locale.currency(int(value), grouping=True, symbol='Rp. ')
+   value = rupiah(int(value))
    value2 = str(round(data_gdp['%HB'].loc[data_gdp['Tahun']==option9].values[0], 2)) + ' %'
    st.metric(label=f'Estimasi Pendapatan (Harga Berlaku) Tahun {option9}', value=value, delta=value2 + f' dari Tahun {option9-1}')
 
